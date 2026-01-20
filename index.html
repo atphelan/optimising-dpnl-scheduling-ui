@@ -167,9 +167,14 @@ async function runCounts() {
   const r = await fetch(`${API}/optimize/counts?${params}`);
   const d = await r.json();
 
+  const tWait = d["Optimal t_wait"];
+  const snrK2 = d["SNR k2 from simulation"];
+
   document.getElementById("output").value =
-    "Optimised waiting time between pulses (counts method):\n\n" +
-    JSON.stringify(d, null, 2);
+    `Optimised waiting time between pulses (counts method): ${tWait} hours
+
+  In the simulation data, we found a signal-to-noise ratio of ${snrK2}
+  for S phase inference with these parameters and a ${tWait} hour waiting time.`;
 }
 
 async function runPhases() {
@@ -186,8 +191,14 @@ async function runPhases() {
 
   const r = await fetch(`${API}/optimize/phases?${params}`);
   const d = await r.json();
+  const tWait = d["Optimal t_wait"];
+  const snrK2 = d["SNR k2 from simulation"];
+
   document.getElementById("output").value =
-    "Optimised waiting time between pulses (phase-time method):\n\n" + JSON.stringify(d, null, 2);
+    `Optimised waiting time between pulses (phase times method): ${tWait} hours
+
+  In the simulation data, we found a signal-to-noise ratio of ${snrK2}
+  for S phase inference with these parameters and a ${tWait} hour waiting time.`;
 }
 </script>
 
