@@ -173,8 +173,9 @@ async function runCounts() {
   document.getElementById("output").value =
     `Optimised waiting time between pulses (counts method): ${tWait} hours
 
-  In the simulation data, we found a signal-to-noise ratio of ${snrK2}
-  for S phase inference with these parameters and a ${tWait} hour waiting time.`;
+  In the simulation data, we found a maximum signal-to-noise ratio of ${snrK2}
+  for S phase inference on parameters which produced similar counts to the
+  values provided, when simulated with a ${tWait} hour waiting time.`;
 }
 
 async function runPhases() {
@@ -197,8 +198,9 @@ async function runPhases() {
   document.getElementById("output").value =
     `Optimised waiting time between pulses (phase times method): ${tWait} hours
 
-  In the simulation data, we found a signal-to-noise ratio of ${snrK2}
-  for S phase inference with these parameters and a ${tWait} hour waiting time.`;
+  In the simulation data, we found a maximum signal-to-noise ratio of ${snrK2}
+  for S phase inference on cell with relative cycle phase times similar to the
+  values provided, when simulated with a ${tWait * 24/tc} hour waiting time.`;
 }
 </script>
 
