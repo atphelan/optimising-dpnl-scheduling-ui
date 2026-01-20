@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DPNL Optimiser</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      line-height: 1.5;
+    }
+    .section {
+      margin-bottom: 25px;
+    }
+    .inputs {
+      display: none;
+      margin-top: 15px;
+    }
+    label {
+      display: block;
+      margin: 10px 0;
+    }
+    input {
+      width: 150px;
+      margin-left: 10px;
+    }
+    button {
+      margin-right: 10px;
+      padding: 6px 12px;
+    }
+    textarea {
+      width: 100%;
+      height: 180px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Dual-pulse dual-nucleoside analogue labelling scheduling optimiser</h2>
+
+<div class="section">
+  <p>
+    This tool estimates the optimal scheduling time for S phase inference 
+    based on either observed event counts or measured phase times.
+    It uses normalisation to choose the closest series in our simulation
+    data by relative cell counts or phase times, and reporting its optimum.
+  </p>
+</div>
+
+<div class="section">
+  <strong>Select input method:</strong><br>
+  <button onclick="showCounts()">Use Labelled Cell Counts</button>
+  <button onclick="showPhases()">Use Cell Cycle Phase Times</button>
+</div>
+
+<!-- COUNTS INPUTS -->
+<div id="counts" class="inputs section">
+  <h3>Counts-based inputs</h3>
+  <p>
+    Enter observed counts or relative counts from the experiment. All values must be positive.
+    Please note there will be some delay while the optimiser initialises and runs.
+  </p>
+
+  <label>Inter-pulse waiting time (hours, must be an integer 1-12):
+    <input type="number" id="dt" step="1" min="1">
+  </label>
+
+  <label>Single-positive count for label 1:
+    <input type="number" id="edu_sp" step="any" min="0">
+  </label>
+
+  <label>Double-positive count:
+    <input type="number" id="dp" step="any" min="0">
+  </label>
+
+  <label>Single-positive count for label 2:
+    <input type="number" id="brdu_sp" step="any" min="0">
+  </label>
+
+  <button onclick="runCounts()">Run optimiser</button>
+</div>
+
+<!-- PHASE INPUTS -->
+<div id="phases" class="inputs section">
+  <h3>Phase-time inputs</h3>
+  <p>
+    Enter preliminary phase duration estimates. All values must be positive.
+    Please note there will be some delay while the optimiser initialises and runs.
+  </p>
+
+  <label>G1 phase duration (hours):
+    <input type="number" id="tg1" step="any" min="0">
+  </label>
+
+  <label>S phase duration (hours):
+    <input type="number" id="ts" step="any" min="0">
+  </label>
+
+  <label>Total cycle duration (hours):
+    <input type="number" id="tc" step="any" min="0">
+  </label>
+
+  <button onclick="runPhases()">Run optimiser</button>
+</div>
+
+<div class="section">
+  <h3>Results</h3>
+  <textarea id="output" readonly></textarea>
+</div>
+
+<script>
+const API = "https://optimizing-dpnl-scheduling.onrender.com";
+
+function showCounts() {
+  document.getElementById("counts").style.display = "block";
+  document.getElementById("phases").style.display = "none";
+}
+
+function showPhases() {
+  document.getElementById("phases").style.display = "block";
+  document.getElementById("counts").style.display = "none";
+}
+
+async function runCounts() {
+  const params = new URLSearchParams({
+    dt: document.getElementById("dt").value,
+    edu: document.getElementById("edu").value,
+    dp: document.getElementById("dp").value,
+    brdu: document.getElementById("brdu").value
+  });
+
+  const r = await fetch(`${API}/optimize/counts?${params}`);
+  const d = await r.json();
+  document.getElementById("output").value =
+    "Optimised waiting time between pulses (counts method):\n\n" + JSON.stringify(d, null, 2);
+}
+
+async function runPhases() {
+  const params = new URLSearchParams({
+    tg1: document.getElementById("tg1").value,
+    ts: document.getElementById("ts").value,
+    tc: document.getElementById("tc").value
+  });
+
+  const r = await fetch(`${API}/optimize/phases?${params}`);
+  const d = await r.json();
+  document.getElementById("output").value =
+    "Optimised waiting time between pulses (phase-time method):\n\n" + JSON.stringify(d, null, 2);
+}
+</script>
+
+</body>
+</html>
