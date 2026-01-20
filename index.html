@@ -67,7 +67,7 @@
   </label>
 
   <label>Single-positive count for label 1:
-    <input type="number" id="edu_sp" step="any" min="0">
+    <input type="number" id="edu" step="any" min="0">
   </label>
 
   <label>Double-positive count:
@@ -75,7 +75,7 @@
   </label>
 
   <label>Single-positive count for label 2:
-    <input type="number" id="brdu_sp" step="any" min="0">
+    <input type="number" id="brdu" step="any" min="0">
   </label>
 
   <button onclick="runCounts()">Run optimiser</button>
@@ -128,9 +128,9 @@ function showPhases() {
 async function runCounts() {
   const params = new URLSearchParams({
     dt: document.getElementById("dt").value,
-    edu_sp: document.getElementById("edu_sp").value,
+    edu: document.getElementById("edu").value,
     dp: document.getElementById("dp").value,
-    brdu_sp: document.getElementById("brdu_sp").value
+    brdu: document.getElementById("brdu").value
   });
 
   const r = await fetch(`${API}/optimize/counts?${params}`);
