@@ -128,15 +128,17 @@ function showPhases() {
 async function runCounts() {
   const params = new URLSearchParams({
     dt: document.getElementById("dt").value,
-    edu: document.getElementById("edu").value,
+    edu_sp: document.getElementById("edu_sp").value,
     dp: document.getElementById("dp").value,
-    brdu: document.getElementById("brdu").value
+    brdu_sp: document.getElementById("brdu_sp").value
   });
 
   const r = await fetch(`${API}/optimize/counts?${params}`);
   const d = await r.json();
+
   document.getElementById("output").value =
-    "Optimised waiting time between pulses (counts method):\n\n" + JSON.stringify(d, null, 2);
+    "Optimised waiting time between pulses (counts method):\n\n" +
+    JSON.stringify(d, null, 2);
 }
 
 async function runPhases() {
