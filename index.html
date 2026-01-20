@@ -67,15 +67,15 @@
   </label>
 
   <label>Single-positive count for label 1:
-    <input type="number" id="edu" step="any" min="0">
+    <input type="number" id="edu" step="any" min="0.001">
   </label>
 
   <label>Double-positive count:
-    <input type="number" id="dp" step="any" min="0">
+    <input type="number" id="dp" step="any" min="0.001">
   </label>
 
   <label>Single-positive count for label 2:
-    <input type="number" id="brdu" step="any" min="0">
+    <input type="number" id="brdu" step="any" min="0.001">
   </label>
 
   <button onclick="runCounts()">Run optimiser</button>
@@ -90,15 +90,15 @@
   </p>
 
   <label>G1 phase duration (hours):
-    <input type="number" id="tg1" step="any" min="0">
+    <input type="number" id="tg1" step="any" min="0.1">
   </label>
 
   <label>S phase duration (hours):
-    <input type="number" id="ts" step="any" min="0">
+    <input type="number" id="ts" step="any" min="0.1">
   </label>
 
   <label>Total cycle duration (hours):
-    <input type="number" id="tc" step="any" min="0">
+    <input type="number" id="tc" step="any" min="0.1">
   </label>
 
   <button onclick="runPhases()">Run optimiser</button>
@@ -142,11 +142,16 @@ async function runCounts() {
 }
 
 async function runPhases() {
-  const params = new URLSearchParams({
-    tg1: document.getElementById("tg1").value,
-    ts: document.getElementById("ts").value,
-    tc: document.getElementById("tc").value
-  });
+  const tg1 = parseFloat(document.getElementById("tg1").value);
+  const ts  = parseFloat(document.getElementById("ts").value);
+  const tc  = parseFloat(document.getElementById("tc").value);
+
+  if (tc <= tg1 + ts) {
+    alert("Total cycle duration must be greater than G1 + S phase duration.");
+    return;
+  }
+
+  const params = new URLSearchParams({ tg1, ts, tc });
 
   const r = await fetch(`${API}/optimize/phases?${params}`);
   const d = await r.json();
