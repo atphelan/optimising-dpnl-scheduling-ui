@@ -126,12 +126,43 @@ function showPhases() {
 }
 
 async function runCounts() {
-  const params = new URLSearchParams({
-    dt: document.getElementById("dt").value,
-    edu: document.getElementById("edu").value,
-    dp: document.getElementById("dp").value,
-    brdu: document.getElementById("brdu").value
-  });
+  const dt = Number(document.getElementById("dt").value);
+  const edu = parseFloat(document.getElementById("edu").value);
+  const dp = parseFloat(document.getElementById("dp").value);
+  const brdu = parseFloat(document.getElementById("brdu").value);
+
+  if (dt < 1) {
+    alert("Pulse interval cannot be less than 1 hour to compare to the simulation data.");
+    return;
+  }
+
+  if (dt > 12) {
+    alert("Pulse interval cannot be greater than 12 hours to compare to the simulation data.");
+    return;
+  }
+
+  if (!Number.isInteger(dt)) {
+    alert("Inter-pulse waiting time must be an integer to compare to simulation data.");
+    return;
+  }
+
+
+  if (edu <= 0) {
+    alert("Must have a positive non-zero number of cells.");
+    return;
+  }
+
+  if (dp <= 0) {
+    alert("Must have a positive non-zero number of cells.");
+    return;
+  }
+
+  if (brdu <= 0) {
+    alert("Must have a positive non-zero number of cells.");
+    return;
+  }
+
+  const params = new URLSearchParams({ dt, edu, dp, brdu });
 
   const r = await fetch(`${API}/optimize/counts?${params}`);
   const d = await r.json();
