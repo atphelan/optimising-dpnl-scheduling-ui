@@ -55,6 +55,7 @@
   <button onclick="showPhases()">Use Cell Cycle Phase Times</button>
 </div>
 
+
 <!-- COUNTS INPUTS -->
 <div id="counts" class="inputs section">
   <h3>Counts-based inputs</h3>
@@ -130,7 +131,7 @@
 
 
   <label>
-  S-phase optimisation weighting:
+  G1-S phase optimisation weighting:
   </label>
 
   <input
@@ -169,6 +170,35 @@
 
 <script>
 const API = "https://optimizing-dpnl-scheduling.onrender.com";
+
+function syncWeightFromSlider() {
+  const slider = document.getElementById("s_weight_slider");
+  const input  = document.getElementById("s_weight_input");
+  const label  = document.getElementById("s_weight_label");
+
+  const percent = Math.round(slider.value * 100);
+
+  input.value = percent;
+  label.textContent = `(${percent}%)`;
+}
+
+function syncWeightFromInput() {
+  const slider = document.getElementById("s_weight_slider");
+  const input  = document.getElementById("s_weight_input");
+  const label  = document.getElementById("s_weight_label");
+
+  let percent = Number(input.value);
+
+  if (isNaN(percent)) percent = 0;
+  percent = Math.min(100, Math.max(0, percent));
+
+  slider.value = percent / 100;
+  label.textContent = `(${percent}%)`;
+}
+
+function getSWeight() {
+  return Number(document.getElementById("s_weight_slider").value);
+}
 
 function showCounts() {
   document.getElementById("counts").style.display = "block";
