@@ -78,6 +78,33 @@
     <input type="number" id="brdu" step="any" min="0.001">
   </label>
 
+  <label>
+  S-phase optimisation weighting:
+  </label>
+
+  <input
+    type="range"
+    id="s_weight_slider"
+    min="0"
+    max="1"
+    step="0.01"
+    value="0.50"
+    oninput="syncWeightFromSlider()"
+  >
+
+  <input
+    type="number"
+    id="s_weight_input"
+    min="0"
+    max="100"
+    step="1"
+    value="50"
+    oninput="syncWeightFromInput()"
+  > %
+
+<span id="s_weight_label">(50%)</span>
+
+
   <button onclick="runCounts()">Run optimiser</button>
 </div>
 
@@ -100,6 +127,34 @@
   <label>Total cycle duration (hours):
     <input type="number" id="tc" step="any" min="0.1">
   </label>
+
+
+  <label>
+  S-phase optimisation weighting:
+  </label>
+
+  <input
+    type="range"
+    id="s_weight_slider"
+    min="0"
+    max="1"
+    step="0.01"
+    value="0.50"
+    oninput="syncWeightFromSlider()"
+  >
+
+  <input
+    type="number"
+    id="s_weight_input"
+    min="0"
+    max="100"
+    step="1"
+    value="50"
+    oninput="syncWeightFromInput()"
+  > %
+
+  <span id="s_weight_label">(50%)</span>
+
 
   <button onclick="runPhases()">Run optimiser</button>
 </div>
@@ -130,6 +185,7 @@ async function runCounts() {
   const edu = parseFloat(document.getElementById("edu").value);
   const dp = parseFloat(document.getElementById("dp").value);
   const brdu = parseFloat(document.getElementById("brdu").value);
+  const sw = parseFloat(document.getElementById("sw").value);
 
   if (dt < 1) {
     alert("Pulse interval cannot be less than 1 hour to compare to the simulation data.");
@@ -162,20 +218,32 @@ async function runCounts() {
     return;
   }
 
-  const params = new URLSearchParams({ dt, edu, dp, brdu });
+  if (sw < 0) {
+      alert("Weight for sw must lay between 0 and 1.");
+    return;
+  }
+  if (sw > 1) {
+      alert("Weight for sw must lay between 0 and 1.");
+    return;
+  }
+
+  const g1w = 1-sw;
+
+  const params = new URLSearchParams({ dt, edu, dp, brdu, g1w, sw });
 
   const r = await fetch(`${API}/optimize/counts?${params}`);
   const d = await r.json();
 
   const tWait = d["Optimal t_wait"];
-  const snrK2 = d["SNR k2 from simulation"];
+  const snr = d["SNR k2 from simulation"];
 
   document.getElementById("output").value =
     `Optimised waiting time between pulses (counts method): ${tWait} hours
 
-  In the simulation data, we found a maximum signal-to-noise ratio of ${snrK2}
-  for S phase inference on parameters which produced similar counts to the
-  values provided, when simulated with a ${tWait} hour waiting time.`;
+  In the simulation data, we found a maximum signal-to-noise ratio of ${snr}
+  for inference with a ${g1w*100}% G1 weighting and ${sw*100}% S weighting
+  on parameters which produced similar counts to the values provided,
+  when simulated with a ${tWait} hour waiting time.`;
 }
 
 async function runPhases() {
@@ -188,20 +256,31 @@ async function runPhases() {
     return;
   }
 
-  const params = new URLSearchParams({ tg1, ts, tc });
+  if (sw < 0) {
+      alert("Weight for sw must lay between 0 and 1.");
+    return;
+  }
+  if (sw > 1) {
+      alert("Weight for sw must lay between 0 and 1.");
+    return;
+  }
+
+  const g1w = 1-sw;
+
+  const params = new URLSearchParams({ tg1, ts, tc, g1w, sw });
 
   const r = await fetch(`${API}/optimize/phases?${params}`);
   const d = await r.json();
   const tWait = d["Optimal t_wait"];
-  const snrK2 = d["SNR k2 from simulation"];
+  const snr = d["SNR k2 from simulation"];
 
   document.getElementById("output").value =
     `Optimised waiting time between pulses (phase times method): ${tWait} hours
 
-  In the simulation data, we found a maximum signal-to-noise ratio of ${snrK2}
-  for S phase inference on cell with relative cycle phase times similar to the
-  values provided, when simulated on a 24-hour cycle with a ${tWait * 24/tc}
-  hour waiting time.`;
+  In the simulation data, we found a maximum signal-to-noise ratio of ${snr}
+  for inference with a ${g1w*100}% G1 weighting and ${sw*100}% S weighting on 
+  cells with relative cycle phase times similar to the values provided,
+  when simulated on a 24-hour cycle with a ${tWait * 24/tc} hour waiting time.`;
 }
 </script>
 
