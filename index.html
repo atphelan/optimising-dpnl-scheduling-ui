@@ -276,7 +276,7 @@ async function runCounts() {
     return;
   }
 
-  const sw = getSWeight();
+  const sw = getSWeightCounts();
 
   if (sw < 0) {
       alert("Weight for sw must lay between 0 and 1.");
@@ -316,7 +316,7 @@ async function runPhases() {
     return;
   }
 
-  const sw = getSWeight();
+  const sw = getSWeightPhases();
 
   if (sw < 0) {
       alert("Weight for sw must lay between 0 and 1.");
