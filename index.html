@@ -103,8 +103,10 @@
     oninput="syncWeightFromInput()"
   > %
 
-<span id="s_weight_label">(50%)</span>
+  <span id="s_weight_label">(50%)</span>
 
+  <p>
+  </p>
 
   <button onclick="runCounts()">Run optimiser</button>
 </div>
@@ -156,6 +158,8 @@
 
   <span id="s_weight_label">(50%)</span>
 
+  <p>
+  </p>
 
   <button onclick="runPhases()">Run optimiser</button>
 </div>
@@ -215,7 +219,6 @@ async function runCounts() {
   const edu = parseFloat(document.getElementById("edu").value);
   const dp = parseFloat(document.getElementById("dp").value);
   const brdu = parseFloat(document.getElementById("brdu").value);
-  const sw = parseFloat(document.getElementById("sw").value);
 
   if (dt < 1) {
     alert("Pulse interval cannot be less than 1 hour to compare to the simulation data.");
@@ -247,6 +250,8 @@ async function runCounts() {
     alert("Must have a positive non-zero number of cells.");
     return;
   }
+
+  const s_weight = getSWeight();
 
   if (sw < 0) {
       alert("Weight for sw must lay between 0 and 1.");
@@ -285,6 +290,8 @@ async function runPhases() {
     alert("Total cycle duration must be greater than G1 + S phase duration.");
     return;
   }
+
+  const s_weight = getSWeight();
 
   if (sw < 0) {
       alert("Weight for sw must lay between 0 and 1.");
