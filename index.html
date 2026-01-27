@@ -276,7 +276,7 @@ async function runCounts() {
     return;
   }
 
-  const sw = Math.round(getSWeightCounts());
+  const sw = getSWeightCounts();
 
   if (sw < 0) {
       alert("Weight for sw must lay between 0 and 1.");
@@ -287,7 +287,7 @@ async function runCounts() {
     return;
   }
 
-  const g1w = Math.round(1-sw);
+  const g1w = 1-sw;
 
   const params = new URLSearchParams({ dt, edu, dp, brdu, g1w, sw });
 
@@ -300,8 +300,8 @@ async function runCounts() {
   document.getElementById("output").value =
     `Optimised waiting time between pulses (counts method): ${tWait} hours
 
-  In the simulation data, we found a maximum signal-to-noise ratio of ${snr}
-  for inference with a ${g1w*100}% G1 weighting and ${sw*100}% S weighting
+  In the simulation data, we found a maximum signal-to-noise ratio of ${Math.round(snr*10)/10}
+  for inference with a ${Math.round(g1w*100)}% G1 weighting and ${Math.round(sw*100)}% S weighting
   on parameters which produced similar counts to the values provided,
   when simulated with a ${tWait} hour waiting time.`;
 }
@@ -316,7 +316,7 @@ async function runPhases() {
     return;
   }
 
-  const sw = Math.round(getSWeightPhases());
+  const sw = getSWeightPhases();
 
   if (sw < 0) {
       alert("Weight for sw must lay between 0 and 1.");
@@ -327,7 +327,7 @@ async function runPhases() {
     return;
   }
 
-  const g1w = Math.round(1-sw);
+  const g1w = 1-sw;
 
   const params = new URLSearchParams({ tg1, ts, tc, g1w, sw });
 
@@ -339,8 +339,8 @@ async function runPhases() {
   document.getElementById("output").value =
     `Optimised waiting time between pulses (phase times method): ${tWait} hours
 
-  In the simulation data, we found a maximum signal-to-noise ratio of ${snr}
-  for inference with a ${g1w*100}% G1 weighting and ${sw*100}% S weighting on 
+  In the simulation data, we found a maximum signal-to-noise ratio of ${Math.round(snr*10)/10}
+  for inference with a ${Math.round(g1w*100)}% G1 weighting and ${Math.round(sw*100)}% S weighting on 
   cells with relative cycle phase times similar to the values provided,
   when simulated on a 24-hour cycle with a ${tWait * 24/tc} hour waiting time.`;
 }
