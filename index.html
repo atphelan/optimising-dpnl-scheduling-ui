@@ -80,30 +80,28 @@
   </label>
 
   <label>
-  S-phase optimisation weighting:
+  G1-S phase optimisation weighting:
   </label>
 
   <input
     type="range"
-    id="s_weight_slider"
+    id="s_weight_slider_counts"
     min="0"
     max="1"
     step="0.01"
     value="0.50"
-    oninput="syncWeightFromSlider()"
+    oninput="syncWeightFromSliderCounts()"
   >
 
   <input
     type="number"
-    id="s_weight_input"
+    id="s_weight_input_counts"
     min="0"
     max="100"
     step="1"
     value="50"
-    oninput="syncWeightFromInput()"
+    oninput="syncWeightFromInputCounts()"
   > %
-
-  <span id="s_weight_label">(50%)</span>
 
   <p>
   </p>
@@ -138,25 +136,23 @@
 
   <input
     type="range"
-    id="s_weight_slider"
+    id="s_weight_slider_phases"
     min="0"
     max="1"
     step="0.01"
     value="0.50"
-    oninput="syncWeightFromSlider()"
+    oninput="syncWeightFromSliderPhases()"
   >
 
   <input
     type="number"
-    id="s_weight_input"
+    id="s_weight_input_phases"
     min="0"
     max="100"
     step="1"
     value="50"
-    oninput="syncWeightFromInput()"
+    oninput="syncWeightFromInputPhases()"
   > %
-
-  <span id="s_weight_label">(50%)</span>
 
   <p>
   </p>
@@ -175,10 +171,10 @@
 <script>
 const API = "https://optimizing-dpnl-scheduling.onrender.com";
 
-function syncWeightFromSlider() {
-  const slider = document.getElementById("s_weight_slider");
-  const input  = document.getElementById("s_weight_input");
-  const label  = document.getElementById("s_weight_label");
+function syncWeightFromSliderCounts() {
+  const slider = document.getElementById("s_weight_slider_counts");
+  const input  = document.getElementById("s_weight_input_counts");
+  const label  = document.getElementById("s_weight_label_counts");
 
   const percent = Math.round(slider.value * 100);
 
@@ -186,10 +182,10 @@ function syncWeightFromSlider() {
   label.textContent = `(${percent}%)`;
 }
 
-function syncWeightFromInput() {
-  const slider = document.getElementById("s_weight_slider");
-  const input  = document.getElementById("s_weight_input");
-  const label  = document.getElementById("s_weight_label");
+function syncWeightFromInputCounts() {
+  const slider = document.getElementById("s_weight_slider_counts");
+  const input  = document.getElementById("s_weight_input_counts");
+  const label  = document.getElementById("s_weight_label_counts");
 
   let percent = Number(input.value);
 
@@ -200,8 +196,37 @@ function syncWeightFromInput() {
   label.textContent = `(${percent}%)`;
 }
 
-function getSWeight() {
-  return Number(document.getElementById("s_weight_slider").value);
+function getSWeightCounts() {
+  return Number(document.getElementById("s_weight_slider_counts").value);
+}
+
+function syncWeightFromSliderPhases() {
+  const slider = document.getElementById("s_weight_slider_phases");
+  const input  = document.getElementById("s_weight_input_phases");
+  const label  = document.getElementById("s_weight_label_phases");
+
+  const percent = Math.round(slider.value * 100);
+
+  input.value = percent;
+  label.textContent = `(${percent}%)`;
+}
+
+function syncWeightFromInputPhases() {
+  const slider = document.getElementById("s_weight_slider_phases");
+  const input  = document.getElementById("s_weight_input_phases");
+  const label  = document.getElementById("s_weight_label_phases");
+
+  let percent = Number(input.value);
+
+  if (isNaN(percent)) percent = 0;
+  percent = Math.min(100, Math.max(0, percent));
+
+  slider.value = percent / 100;
+  label.textContent = `(${percent}%)`;
+}
+
+function getSWeightPhases() {
+  return Number(document.getElementById("s_weight_slider_phases").value);
 }
 
 function showCounts() {
