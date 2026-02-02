@@ -351,6 +351,16 @@ async function runPhases() {
     For more functionality and for documented code from the work, please visit the project's
     <a href="https://github.com/atphelan/optimizing-dpnl-scheduling">GitHub page</a>.
   </p>
+  <p>
+    Please note that the model used to generate the source data for this optimisation has several caveats.
+      1. The simulated cells have a fixed average cycle period of 24 hours.
+      2. The cells do not differentiate or migrate such that they would be missed in final DPNL counts.
+      3. The cells proliferate continuously, with no quiescence state.
+      4. Optimisation assumes 3 repeat measurements of a system with 300 cells at the time of EdU/label
+        1 exposure. Simulation reveals slight shifts in the optimal timing with more repeats or cells.
+    As such, our model is most ideally suited to early stages of stem-like cancerous cell proliferation.
+    Optimal timing conditions are likely to differ by an hour or more with significantly different cells. 
+  </p>
 </div>
 
 </body>
